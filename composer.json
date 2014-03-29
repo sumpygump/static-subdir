@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "nerdery/wp-plugin-framework": "dev-master"
+    }
+}

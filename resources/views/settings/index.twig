@@ -1,0 +1,16 @@
+{% extends "layouts/admin.twig" %}
+
+{% block body %}
+    <h2>Freepass Settings</h2>
+
+    <hr>
+
+    <form action="options.php" method="post">
+        {{ settingsMarkup | raw }}
+        <table class="form-table">
+            {{ fieldMarkup | raw }}
+        </table>
+        <input class="button-primary" id="submitbutton" name="save" type="submit" value="Save Changes"/>
+    </form>
+
+{% endblock %}
