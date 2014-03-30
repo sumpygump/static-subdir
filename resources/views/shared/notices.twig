@@ -2,7 +2,7 @@
     {% if notices %}
         {% for notice in notices %}
             <li>
-                <div class="updated">{{ notice|raw }}</div>
+                <div class="updated"><p>{{ notice|raw }}</p></div>
             </li>
         {% endfor %}
     {% endif %}
@@ -10,7 +10,7 @@
     {% if errors %}
         {% for error in errors %}
             <li>
-                <div class="error">{{ error|raw }}</div>
+                <div class="error"><p>{{ error|raw }}</p></div>
             </li>
         {% endfor %}
     {% endif %}

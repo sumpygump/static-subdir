@@ -1,7 +1,16 @@
 {% extends "layouts/admin.twig" %}
 
 {% block body %}
-    <h2>Freepass Settings</h2>
+    <h2>StaticSubdir Settings</h2>
+
+    <p>This plugin allows you to specify a virtual URL path and have static
+        content served from a provided directory on disk.</p>
+
+    <p>Example: If I set the virtual path to <code>downloads</code> that
+        contained some .txt files, then users can visit
+        http://mysite.com/downloads/example.txt to download that file. This
+        plugin will try to find example.txt at the path specified in the
+        <em>real path</em> setting below.</p>
 
     <hr>
 

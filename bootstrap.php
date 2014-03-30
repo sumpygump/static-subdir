@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Free Pass
+Plugin Name: Static Subdir
 Plugin URI:
 Description: Serve static files from a specific path on server
 Version: 1.0.0
@@ -8,9 +8,13 @@ Author: Jansen Price
 Author URI: http://nerdery.com
 */
 
-namespace Freepass;
+namespace StaticSubdir;
 
 require_once 'vendor/autoload.php';
+
+use Nerdery\Plugin\Plugin;
+use Nerdery\Plugin\Router\Route;
+use StaticSubdir\WordPress\Proxy;
 
 /**
  * Bootstrap the plugin
@@ -38,11 +42,15 @@ function bootstrap()
      */
     $factory = new \Nerdery\Plugin\Factory\Factory(array(
         'templatePath' => dirname(__FILE__) . '/resources/views',
-        'prefix' => 'freepass_',
-        'slug' => 'freepass',
+        'prefix' => 'staticsubdir_',
+        'slug' => 'staticsubdir',
     ));
     $plugin = $factory->make();
-    $plugin = $factory->registerDataServices($plugin);
+    
+    // Load in our extended proxy
+    $plugin[Plugin::CONTAINER_KEY_WP_PROXY] = function ($c) {
+        return new Proxy();
+    };
 
     /*
      * Register controllers
@@ -53,17 +61,11 @@ function bootstrap()
      * sense that they be loaded immediately so that they can hook into the
      * necessary WordPress event calls they need to respond to.
      */
-    $plugin['controller.settings'] = new \Freepass\Controller\SettingsController($plugin);
-    $plugin['controller.serve'] = new \Freepass\Controller\ServeController($plugin);
+    $plugin['controller.settings'] = new \StaticSubdir\Controller\SettingsController($plugin);
+    $plugin['controller.serve'] = new \StaticSubdir\Controller\ServeController($plugin);
 
-    $routePattern = $plugin->getProxy()->getOption('freepass_virtual_folder');
-
-    // Define a route...
-    $route = new \Nerdery\Plugin\Router\Route(
-       '^' . $routePattern . '',
-       'controller.serve:indexAction'
-    );
-    $plugin->registerRoute($route);
+    // Register the custom route
+    $plugin['controller.settings']->registerStaticSubdirRoute();
 
     // Run the plugin!
     $plugin->run();

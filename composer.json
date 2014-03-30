@@ -1,4 +1,7 @@
 {
+    "name": "sumpygump/static-subdir",
+    "description": "WordPress plugin to serve static files in a subdirectory",
+    "type": "wordpress-plugin",
     "autoload": {
         "psr-0": {
             "": "src/"
