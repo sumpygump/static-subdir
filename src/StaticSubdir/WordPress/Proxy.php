@@ -63,4 +63,20 @@ class Proxy extends WordPressProxy
 
         return is_main_site();
     }
+
+    /**
+     * Get admin URL
+     *
+     * Retrieve the url to the admin area for a given site.
+     *
+     * @see http://codex.wordpress.org/Function_Reference/get_admin_url
+     * @param int $blogId Blog id, defaults to current site
+     * @param string $path Path to append to URL
+     * @param string $scheme URL scheme, 'admin', 'http', or 'https'
+     * @return string
+     */
+    public function getAdminUrl($blogId = null, $path = null, $scheme = null)
+    {
+        return get_admin_url($blogId, $path, $scheme);
+    }
 }

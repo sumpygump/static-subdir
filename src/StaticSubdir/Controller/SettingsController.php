@@ -127,6 +127,24 @@ class SettingsController extends Controller
                 return $controller->onLoadSettingsPage();
             }
         );
+
+        // Add an action link
+        $proxy->addFilter(
+            'plugin_action_links_' . $this->getContainer()->get('plugin.actionlink.name'),
+            function ($links) use ($controller) {
+                $url = $controller->getProxy()->getAdminUrl(null, "admin.php?page=" . self::SETTINGS_PAGE_SLUG);
+                $link = $controller->getContainer()->getViewRenderer()->render(
+                    'settings/anchor.twig',
+                    array(
+                        'url' => $url,
+                        'body' => 'Settings',
+                    )
+                );
+
+                array_unshift($links, $link);
+                return $links;
+            }
+        );
     }
 
     /**

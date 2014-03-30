@@ -52,6 +52,9 @@ function bootstrap()
         return new Proxy();
     };
 
+    // This is the name of the plugin according to WP plugins page
+    $plugin['plugin.actionlink.name'] = basename(__DIR__) . '/' . basename(__FILE__);
+
     /*
      * Register controllers
      *
