@@ -6,11 +6,10 @@
     <p>This plugin allows you to specify a virtual URL path and have static
         content served from a provided directory on disk.</p>
 
-    <p>Example: If I set the virtual path to <code>downloads</code> that
-        contained some .txt files, then users can visit
-        http://mysite.com/downloads/example.txt to download that file. This
-        plugin will try to find example.txt at the path specified in the
-        <em>real path</em> setting below.</p>
+    <p>Example: Set the virtual path to a value like <code>downloads</code>,
+        meaning that users could visit {{ homeUrl }}downloads/example.txt to
+        download the file. The plugin will look for the file example.txt at the
+        path specified by the <em>real path</em> setting below.</p>
 
     <hr>
 

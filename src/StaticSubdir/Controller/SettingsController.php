@@ -163,6 +163,7 @@ class SettingsController extends Controller
         $output = array(
             'settingsMarkup' => $settingsMarkup,
             'fieldMarkup' => $fieldMarkup,
+            'homeUrl' => $this->getHomeUrl(),
         );
 
         return $this->render('settings/index.twig', $output);
