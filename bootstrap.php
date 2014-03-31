@@ -10,6 +10,12 @@ Author URI: http://nerdery.com
 
 namespace StaticSubdir;
 
+// Composer autoload require guard
+$root = realpath(dirname(__FILE__));
+if (!file_exists($root . DIRECTORY_SEPARATOR . 'vendor/autoload.php')) {
+    die("You must run the command `composer install` from the terminal in the directory '$root' before activating this plugin.\n");
+}
+
 require_once 'vendor/autoload.php';
 
 use Nerdery\Plugin\Plugin;
