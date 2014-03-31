@@ -137,6 +137,10 @@ class ServeController extends Controller
     {
         $extension = pathinfo($file, PATHINFO_EXTENSION);
 
+        // TODO: This mini-server is looking kinda gross. Figure out a more 
+        // automatic and robust way to send the correct mime types for each 
+        // file
+
         $contentType = 'text/html';
 
         switch ($extension) {
@@ -160,6 +164,18 @@ class ServeController extends Controller
                 break;
             case 'php':
                 $contentType = 'text/php';
+                break;
+            case 'gz':
+                $contentType = 'application/x-gzip';
+                break;
+            case 'rar':
+                $contentType = 'application/x-rar-compressed';
+                break;
+            case 'tar':
+                $contentType = 'application/x-tar';
+                break;
+            case 'zip':
+                $contentType = 'application/zip';
                 break;
             case 'html': // pass through
             default:
