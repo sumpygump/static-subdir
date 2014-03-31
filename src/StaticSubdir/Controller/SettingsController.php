@@ -169,6 +169,42 @@ class SettingsController extends Controller
     }
 
     /**
+     * Validate permalink settings. The plugin cannot work if the permalinks 
+     * settings is something other than "Default"
+     *
+     * @return bool
+     */
+    private function permalinksEnabled()
+    {
+        $permalinkStrategy = $this->getProxy()->getOption('permalink_structure');
+        return (empty($permalinkStrategy)) ? false : true;
+    }
+
+    /**
+     * Validate Permalinks Setting
+     *
+     * @return bool
+     */
+    private function validatePermalinksSetting()
+    {
+        if ($this->permalinksEnabled()) {
+            return true;
+        }
+
+        $url = $this->getProxy()->getAdminUrl(null, "options-permalink.php");
+        $link = $this->getContainer()->getViewRenderer()->render(
+            'settings/anchor.twig',
+            array(
+                'url' => $url,
+                'body' => 'Settings > Permalinks',
+            )
+        );
+
+        $this->getFlashBag()->add('error', "Permalinks must be enabled to use this plugin. Update in $link. Any setting other than \"Default\" must be selected to proceed.");
+        return false;
+    }
+
+    /**
      * Method that is called when the settings page is loaded
      *
      * @return void
@@ -176,6 +212,10 @@ class SettingsController extends Controller
     public function onLoadSettingsPage()
     {
         $container = $this->getContainer();
+
+        if (!$this->validatePermalinksSetting()) {
+            return false;
+        }
 
         // After user has saved the settings form
         if ($container->getRequest()->get('settings-updated')) {
@@ -190,7 +230,7 @@ class SettingsController extends Controller
         $routePattern = $this->getPluginOption(self::SETTING_VIRTUAL_PATH);
 
         if (trim(rtrim($routePattern, '/')) == '') {
-            $this->getFlashBag()->add('error', 'Static Subdir is disabled due to an invalid virtual path');
+            $this->getFlashBag()->add('error', 'Static Subdir is disabled due to an invalid virtual path. Please correct path below.');
         }
     }
 
@@ -201,14 +241,20 @@ class SettingsController extends Controller
      */
     public function registerStaticSubdirRoute()
     {
+        // Don't so this unless permalinks are enabled
+        if (false === $this->permalinksEnabled()) {
+            return false;
+        }
+
         // WP has a hard time registering the route when it ends in '/'
         $routePattern = rtrim($this->getPluginOption(self::SETTING_VIRTUAL_PATH), '/');
 
+        // If the value is blank, don't register
         if (trim($routePattern) == '') {
             return false;
         }
 
-        // Define the custom freepass route...
+        // Define the custom static subdir route...
         $route = new Route(
            '^' . $routePattern,
            'controller.serve:indexAction'
