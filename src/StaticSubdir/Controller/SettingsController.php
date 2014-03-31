@@ -201,8 +201,46 @@ class SettingsController extends Controller
             )
         );
 
-        $this->getFlashBag()->add('error', "Permalinks must be enabled to use this plugin. Update in $link. Any setting other than \"Default\" must be selected to proceed.");
+        $this->getFlashBag()->add(
+            'error',
+            "Permalinks must be enabled to use this plugin. Update in $link. "
+            . "Any setting other than \"Default\" must be selected to proceed."
+        );
         return false;
+    }
+
+    /**
+     * validateVirtualPath
+     *
+     * @return void
+     */
+    private function validateVirtualPath()
+    {
+        $routePattern = $this->getPluginOption(self::SETTING_VIRTUAL_PATH);
+
+        if (trim(rtrim($routePattern, '/')) == '') {
+            $this->getFlashBag()->add(
+                'error',
+                'Static Subdir is disabled due to an invalid virtual path. Please correct path below.'
+            );
+        }
+    }
+
+    /**
+     * Validate real path
+     *
+     * @return void
+     */
+    private function validateRealPath()
+    {
+        $realpath = ABSPATH . $this->getPluginOption(self::SETTING_REAL_PATH);
+
+        if (false === realpath($realpath)) {
+            $this->getFlashBag()->add(
+                'error',
+                'The real path defined below does not exist. The plugin will not serve any files.'
+            );
+        }
     }
 
     /**
@@ -228,11 +266,8 @@ class SettingsController extends Controller
             }
         }
 
-        $routePattern = $this->getPluginOption(self::SETTING_VIRTUAL_PATH);
-
-        if (trim(rtrim($routePattern, '/')) == '') {
-            $this->getFlashBag()->add('error', 'Static Subdir is disabled due to an invalid virtual path. Please correct path below.');
-        }
+        $this->validateVirtualPath();
+        $this->validateRealPath();
     }
 
     /**

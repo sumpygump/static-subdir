@@ -29,21 +29,29 @@ class ServeController extends Controller
     {
         $plugin = $this->getContainer();
         $proxy = $plugin->getProxy();
+        $settings = $plugin['controller.settings'];
 
-        $basePath = ABSPATH . $proxy->getOption('staticsubdir_real_path');
+        $basePath = ABSPATH . $settings->getPluginOption(SettingsController::SETTING_REAL_PATH);
         $basePath = realpath($basePath);
 
         $targetFile = $this->getTargetFileFromUrl(
             $this->getRequest()->server->get('SCRIPT_URL'),
-            $proxy->getOption('staticsubdir_virtual_path')
+            $settings->getPluginOption(SettingsController::SETTING_VIRTUAL_PATH)
         );
+
+        // If basePath turned out to be false, that means the
+        // real path doesn't exist, bail out.
+        if (false === $basePath) {
+            $this->serveFileNotFound($targetFile);
+            return false;
+        }
 
         $path = rtrim($basePath, '/') . '/' . $targetFile;
 
         if (file_exists($path) && is_readable($path)) {
             $this->serveFile($path);
         } else {
-            $this->serveFileNotFound($path);
+            $this->serveFileNotFound($targetFile);
         }
     }
 
