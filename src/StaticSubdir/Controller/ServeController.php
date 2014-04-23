@@ -185,8 +185,11 @@ class ServeController extends Controller
             case 'zip':
                 $contentType = 'application/zip';
                 break;
-            case 'html': // pass through
+            case 'html':
+                $contentType = 'text/html';
+                break;
             default:
+                $contentType = 'text/plain';
                 break;
         }
 
